@@ -5,20 +5,27 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p 8080",
+    "lint": "next lint",
+    "db:create": "docker compose -f db.yml up -d",
+    "db:studio": "dotenv -e .env.development.local yarn prisma studio",
+    "db:init": "dotenv -e .env.development.local yarn prisma db push",
+    "migrate:dev": "dotenv -e .env.development.local yarn prisma migrate dev"
   },
   "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "dotenv-cli": "^8.0.0",
+    "next": "15.3.1",
+    "prisma": "^6.7.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.3.1"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
