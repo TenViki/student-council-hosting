@@ -8,13 +8,16 @@ generator client {
 }
 
 model User {
-  id        String    @id @default(cuid())
+  id        String          @id @default(cuid())
   name      String
-  email     String    @unique
+  email     String          @unique
+  admin     Boolean         @default(false)
   password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
   sessions  Session[]
+  council   StudentCouncil? @relation(fields: [councilId], references: [id])
+  councilId String?
 }
 
 model Session {
@@ -24,4 +27,32 @@ model Session {
   expires   DateTime
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+}
+
+model StudentCouncil {
+  id        String   @id @default(cuid())
+  name      String
+  subdomain String   @unique
+  school    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   User[]
+
+  // docker info
+  dockerNetwork String
+  containers    DockerContainer[]
+}
+
+model DockerContainer {
+  id         String          @id @default(cuid())
+  name       String
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  council    StudentCouncil? @relation(fields: [councilId], references: [id])
+  councilId  String?
+  isWebsite  Boolean
+  isDatabase Boolean
+
+  directory String
+  image     String
 }
