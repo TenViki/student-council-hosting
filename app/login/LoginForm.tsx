@@ -1,6 +1,15 @@
 "use client";
 
-import { Anchor, Button, Flex, Paper, Stack, Text, TextInput, Title } from "@mantine/core";
+import {
+  Anchor,
+  Button,
+  Flex,
+  Paper,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { Form, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -34,36 +43,51 @@ const LoginPage = () => {
 
   return (
     <Stack mt={32} align="center">
-      <Image src="/logo.svg" alt="Logo" width={300} height={50} style={{ maxWidth: "calc(100vw - 2rem)", marginBottom: 16 }} />
+      <Image
+        src="/logo.svg"
+        alt="Logo"
+        width={300}
+        height={50}
+        style={{ maxWidth: "calc(100vw - 2rem)", marginBottom: 16 }}
+      />
 
-      <Form form={loginForm} onSubmit={(values) => loginMutation.mutate(values)}>
+      <Form
+        form={loginForm}
+        onSubmit={(values) => loginMutation.mutate(values)}
+      >
         <Flex direction={"column"} w={500} maw="calc(100vw - 2rem)">
           <Paper withBorder p={16}>
             <Title mb={16} sx={{ textAlign: "center" }}>
-              Login
+              Přihlášení
             </Title>
 
             <Stack>
-              <TextInput name="email" required {...loginForm.getInputProps("email")} label="Email" placeholder="Your email" />
+              <TextInput
+                name="email"
+                required
+                {...loginForm.getInputProps("email")}
+                label="Email"
+                placeholder="Zdej tvůj email..."
+              />
               <TextInput
                 name="password"
                 required
-                label="Password"
-                placeholder="Your password"
+                label="Heslo"
+                placeholder="Zadej tvoje heslo..."
                 type="password"
                 {...loginForm.getInputProps("password")}
               />
               <Button type="submit" loading={loginMutation.isPending}>
-                Login
+                Přihlásit se
               </Button>
             </Stack>
           </Paper>
         </Flex>
 
         <Text ta="center" mt={16}>
-          Don't have an account?{" "}
-          <Anchor component={Link} href="/signup" variant="link">
-            Sign up
+          Ještě nemáš účet?{" "}
+          <Anchor component={Link} href="/contact" variant="link">
+            Kontaktuj nás!
           </Anchor>
         </Text>
       </Form>
