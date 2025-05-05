@@ -1,3 +1,5 @@
+"use server";
+
 import { getAuth } from "@/lib/auth/dal";
 import { UserLoginSchema } from "@/lib/def/UserLoginSchema";
 import { z } from "zod";
