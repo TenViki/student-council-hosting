@@ -29,17 +29,6 @@ export const useUser = () => {
   return userContext;
 };
 
-export const useRedirectIfAuthenticated = () => {
-  const { user } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (user) {
-      router.push("/dash");
-    }
-  }, [user]);
-};
-
 const UserProvider: FC<UserProviderProps> = ({ children, defaultUser }) => {
   const userQuery = useQuery({
     queryKey: ["user"],
