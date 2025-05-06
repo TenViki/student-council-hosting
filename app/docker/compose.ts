@@ -1,6 +1,7 @@
 import { runCommand } from "@/lib/cmd";
 import prisma from "@/lib/prisma";
 import fs from "fs/promises";
+import { getContainerId } from "./networks";
 
 const createCouncilDirectoryIfNotExists = async (councilId: string) => {
   const containerDirectory = process.env.CONTAINERS_DIR;
@@ -78,6 +79,9 @@ export const setupCompose = async (councilId: string) => {
 export const runCompose = async (councilId: string) => {
   const council = await prisma.studentCouncil.findUnique({
     where: { id: councilId },
+    include: {
+      containers: true,
+    },
   });
 
   if (!council) throw new Error("Council not found");
@@ -85,12 +89,32 @@ export const runCompose = async (councilId: string) => {
   const dir = await createCouncilDirectoryIfNotExists(councilId);
 
   // Run the Docker Compose command
-  const [res, err] = await runCommand(`docker compose -f ${dir}/docker-compose.json up -d`, { cwd: dir });
+  const [res, err] = await runCommand(`docker compose -f ${dir}/docker-compose.json --progress json up -d`, { cwd: dir, redirectStderr: true, onStdout: (out) => {
+    const parsed = JSON.parse(out);
+    // TODO: Stream the output to the client
+    console.log(parsed);
+    // {"id":"Container cmaccmnsd000fg0pldqokkxwu-wordpress-1","status":"Creating"}
+  }});
+
   if (err) {
     console.error(`Error running Docker Compose:`, err);
-    throw new Error(`Failed to run Docker Compose for council ${councilId}`);
+    // throw new Error(`Failed to run Docker Compose for council ${councilId}`);
+  }
+
+  for (const container of council.containers) {
+    const imageName = `${council.id}-${container.name.toLowerCase()}`;
+    const containerId = await getContainerId(imageName);
+
+    await prisma.dockerContainer.update({
+      where: { id: container.id },
+      data: {
+        containerId,
+      },
+    });
   }
 
   console.log(`Docker Compose started for council ${councilId}`);
-  return res;
+  return {
+    res, err
+  }
 }

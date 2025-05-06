@@ -34,8 +34,8 @@ export const createDockerNetwork = async (networkName: string) => {
   return res;
 }
 
-export const getTraefikId = async (): Promise<string> => {
-  const [res, err] = await runCommand(`docker ps -q --filter "name=traefik"`);
+export const getContainerId = async (imageName: string): Promise<string> => {
+  const [res, err] = await runCommand(`docker ps -q --filter "name=${imageName}"`);
 
   if (err) {
     console.error(`Error getting Traefik ID: ${err}`);
@@ -46,9 +46,8 @@ export const getTraefikId = async (): Promise<string> => {
     console.error(`Traefik container not found.`);
     throw new Error("Traefik container not found.");
   }
-  const traefikId = res.trim();
-  console.log(`Traefik ID: ${traefikId}`);
-  return traefikId;
+  const containerId = res.trim();
+  return containerId;
 }
 
 export const joinContainerToNetwork = async (networkName: string, containerId: string) => {

@@ -60,19 +60,20 @@ model File {
 }
 
 model DockerContainer {
-  id           String          @id @default(cuid())
-  name         String
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  address      String?
-  hostname     String?
-  council      StudentCouncil? @relation(fields: [councilId], references: [id])
-  councilId    String?
-  image        String
-  containerId  String?
-  directory    String?
-  envVariables Json            @default("{}")
+  id            String          @id @default(cuid())
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  address       String?
+  hostname      String?
+  council       StudentCouncil? @relation(fields: [councilId], references: [id])
+  councilId     String?
+  image         String
+  preconfigured Boolean
+  containerId   String?
+  directory     String?
+  envVariables  Json            @default("{}")
 
-  isWebsite  Boolean
-  isDatabase Boolean
+  isWebsite  Boolean @default(false)
+  isDatabase Boolean @default(false)
 }

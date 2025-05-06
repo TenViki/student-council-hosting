@@ -34,13 +34,14 @@ export const setupWordpress = async () => {
   const mysqlDatabase = "wordpress";
   const mysqlHostname = "mysql_" + council.id;
 
-  const wordpressContainer = await prisma.dockerContainer.create({
+  await prisma.dockerContainer.create({
     data: {
       name: "Wordpress",
       image: "wordpress:latest",
       councilId: council.id,
       isWebsite: true,
       isDatabase: false,
+      preconfigured: true,
       envVariables: {
         WORDPRESS_DB_HOST: `${mysqlHostname}:3306`,
         WORDPRESS_DB_USER: mysqlUser,
@@ -50,7 +51,7 @@ export const setupWordpress = async () => {
     }
   });
 
-  const mysqlContainer = await prisma.dockerContainer.create({
+  await prisma.dockerContainer.create({
     data: {
       name: "MySQL",
       image: "mysql:latest",
@@ -58,6 +59,7 @@ export const setupWordpress = async () => {
       councilId: council.id,
       isWebsite: false,
       isDatabase: true,
+      preconfigured: true,
       envVariables: {
         MYSQL_ROOT_PASSWORD: mysqlPassword,
         MYSQL_USER: mysqlUser,
