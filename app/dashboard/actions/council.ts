@@ -24,7 +24,8 @@ export const getCouncil = async () => {
         omit: {
           password: true,
         }
-      }
+      },
+      containers: true
     },
   });
 

@@ -4,6 +4,7 @@ import React, { FC } from "react";
 import { getCouncil } from "./actions/council";
 import CouncilProvider from "./CouncilProvider";
 import CouncilNav from "./CouncilNav";
+import OnBoarding from "./OnBoarding";
 
 interface LayoutProps {
   children: React.ReactNode;

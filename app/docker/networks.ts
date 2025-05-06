@@ -1,22 +1,19 @@
 "use server";
 
+import { runCommand } from "@/lib/cmd";
 import {exec} from "child_process";
 
-export const listNetworks = async (): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(`docker network ls`, (error: any, stdout: string, stderr: string) => {
-      if (error) {
-        console.error(`Error listing networks: ${error.message}`);
-        reject(error);
-      }
-      if (stderr) {
-        console.error(`Error listing networks: ${stderr}`);
-        reject(new Error(stderr));
-      }
-      console.log(`Networks: ${stdout}`);
-      resolve(stdout);
-    });
-  });
+export const listNetworks = async (): Promise<string[]> => {
+  const [res, err] = await runCommand(`docker network ls --format "{{.Name}}"`);
+
+  if (err) {
+    console.error(`Error listing networks: ${err}`);
+    throw err;
+  }
+
+  console.log(`Networks: ${res}`);
+  const networks = res!.split('\n').slice(1).map(line => line.split(/\s+/)[1]);
+  return networks;
 }
 
 export const createDockerNetwork = async (networkName: string) => {
@@ -27,52 +24,40 @@ export const createDockerNetwork = async (networkName: string) => {
     return;
   }
 
-  return new Promise((resolve, reject) => {
-    exec(`docker network create ${networkName}`, (error: any, stdout: string, stderr: string) => {
-      if (error) {
-        console.error(`Error creating network: ${error.message}`);
-        reject(error);
-      }
-      if (stderr) {
-        console.error(`Error creating network: ${stderr}`);
-        reject(new Error(stderr));
-      }
-      console.log(`Network created: ${stdout}`);
-      resolve(stdout);
-    });
-  });
+  const [res, err] = await runCommand(`docker network create ${networkName}`);
+
+  if (err) {
+    console.error(`Error creating network: ${err}`);
+    throw err;
+  }
+
+  return res;
 }
 
 export const getTraefikId = async (): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(`docker ps -q --filter "name=traefik"`, (error: any, stdout: string, stderr: string) => {
-      if (error) {
-        console.error(`Error getting Traefik ID: ${error.message}`);
-        reject(error);
-      }
-      if (stderr) {
-        console.error(`Error getting Traefik ID: ${stderr}`);
-        reject(new Error(stderr));
-      }
-      console.log(`Traefik ID: ${stdout}`);
-      resolve(stdout.trim());
-    });
-  });
+  const [res, err] = await runCommand(`docker ps -q --filter "name=traefik"`);
+
+  if (err) {
+    console.error(`Error getting Traefik ID: ${err}`);
+    throw err;
+  }
+
+  if (!res) {
+    console.error(`Traefik container not found.`);
+    throw new Error("Traefik container not found.");
+  }
+  const traefikId = res.trim();
+  console.log(`Traefik ID: ${traefikId}`);
+  return traefikId;
 }
 
-export const joinTraefikToNetwork = async (networkName: string, traefikId: string) => {
-  return new Promise((resolve, reject) => {
-    exec(`docker network connect ${networkName} ${traefikId}`, (error: any, stdout: string, stderr: string) => {
-      if (error) {
-        console.error(`Error connecting Traefik to network: ${error.message}`);
-        reject(error);
-      }
-      if (stderr) {
-        console.error(`Error connecting Traefik to network: ${stderr}`);
-        reject(new Error(stderr));
-      }
-      console.log(`Traefik connected to network: ${stdout}`);
-      resolve(stdout);
-    });
-  }); 
+export const joinContainerToNetwork = async (networkName: string, containerId: string) => {
+  const [res, err] = await runCommand(`docker network connect ${networkName} ${containerId}`);
+
+  if (err) {
+    console.error(`Error connecting container to network: ${err}`);
+    throw err;
+  }
+
+  return res!;
 }

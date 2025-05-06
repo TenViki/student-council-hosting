@@ -64,10 +64,12 @@ model DockerContainer {
   name         String
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
+  address      String?
+  hostname     String?
   council      StudentCouncil? @relation(fields: [councilId], references: [id])
   councilId    String?
   image        String
-  containerId  String
+  containerId  String?
   directory    String?
   envVariables Json            @default("{}")
 
