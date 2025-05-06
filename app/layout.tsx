@@ -8,6 +8,9 @@ import QueryClientProvider from "./providers/QueryClientProvider";
 
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/dropzone/styles.css";
+import "mantine-datatable/styles.css";
+
 import UserProvider from "./providers/UserProvider";
 import { getAuth } from "./lib/auth/dal";
 import { ModalsProvider } from "@mantine/modals";
