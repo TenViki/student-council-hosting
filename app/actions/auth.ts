@@ -57,7 +57,7 @@ export const loginUser = async (data: z.infer<typeof UserLoginSchema>) => {
     if (user.admin) {
       redirect("/admin");
     } else {
-      redirect("/dashboard");
+      redirect("/app");
     }
   }
 };

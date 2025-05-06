@@ -1,5 +1,6 @@
 "use client";
 
+import { useClient } from "@/hooks/useClient";
 import { NavLink } from "@mantine/core";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,6 +24,7 @@ const AppNavLink: FC<AppNavbarLinkProps> = ({
   onClick,
 }) => {
   const pathname = usePathname();
+  const client = useClient();
 
   const isActive = exact ? pathname === to : pathname.startsWith(to);
 
@@ -35,6 +37,7 @@ const AppNavLink: FC<AppNavbarLinkProps> = ({
       leftSection={icon}
       label={text}
       active={exact ? pathname === to : pathname.startsWith(to)}
+      defaultOpened={pathname.startsWith(to)}
     >
       {children}
     </NavLink>

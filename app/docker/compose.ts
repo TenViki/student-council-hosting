@@ -56,6 +56,7 @@ export const setupCompose = async (councilId: string) => {
     composeFile.services[container.name.toLowerCase()] = {
       image: container.image,
       hostname: container.hostname || undefined,
+      restart: "unless-stopped",
       environment: container.envVariables,
       networks: [council.dockerNetwork],
       labels: labels,
