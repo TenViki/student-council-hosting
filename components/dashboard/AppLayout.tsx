@@ -32,8 +32,6 @@ const AppLayout: FC<AppLayoutProps> = ({ children, navigation }) => {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 
           <Box sx={{ flexGrow: 1 }}>Studentská rada</Box>
-
-          <ThemeSwitcher />
         </Group>
       </AppShell.Header>
 
