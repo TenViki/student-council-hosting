@@ -50,5 +50,14 @@ export const loginUser = async (data: z.infer<typeof UserLoginSchema>) => {
   }
 
   await createSession(user);
-  redirect("/dashboard");
+
+  if (data.redirectTo) 
+    redirect(data.redirectTo);
+  else {
+    if (user.admin) {
+      redirect("/admin");
+    } else {
+      redirect("/dashboard");
+    }
+  }
 };

@@ -10,6 +10,7 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import UserProvider from "./providers/UserProvider";
 import { getAuth } from "./lib/auth/dal";
+import { ModalsProvider } from "@mantine/modals";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +48,14 @@ export default async function RootLayout({
             <RootStyleRegistry>
               <MantineEmotionProvider>
                 <MantineProvider stylesTransform={emotionTransform}>
-                  {children}
+                  <ModalsProvider
+                    labels={{
+                      cancel: "Zrušit",
+                      confirm: "Potvrdit",
+                    }}
+                  >
+                    {children}
+                  </ModalsProvider>
                 </MantineProvider>
               </MantineEmotionProvider>
             </RootStyleRegistry>

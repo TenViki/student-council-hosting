@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { loginUser } from "../actions/auth";
+import { useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
   const queryClient = useQueryClient();
@@ -33,11 +34,14 @@ const LoginPage = () => {
       });
     },
   });
+  const queryParams = useSearchParams();
+  const redirectTo = queryParams.get("to");
 
   const loginForm = useForm({
     initialValues: {
       email: "",
       password: "",
+      redirectTo: redirectTo || undefined,
     },
   });
 
@@ -83,6 +87,12 @@ const LoginPage = () => {
             </Stack>
           </Paper>
         </Flex>
+
+        {redirectTo && (
+          <Text mt={8} c="dimmed" size="sm" ta="center">
+            Po přihlášení budeš přesměrován na {redirectTo}
+          </Text>
+        )}
 
         <Text ta="center" mt={16}>
           Ještě nemáš účet?{" "}

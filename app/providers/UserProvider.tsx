@@ -47,6 +47,10 @@ const UserProvider: FC<UserProviderProps> = ({ children, defaultUser }) => {
     initialData: defaultUser,
   });
 
+  useEffect(() => {
+    userQuery.refetch();
+  }, [defaultUser]);
+
   return (
     <UserContext.Provider
       value={{
