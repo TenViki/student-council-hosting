@@ -5,7 +5,7 @@ import { CreateStudentCouncilSchema } from "../def/CreateStudentCouncilSchema";
 import { getAuth } from "@/lib/auth/dal";
 import prisma from "@/lib/prisma";
 import { createHashedPassword } from "@/lib/auth/password";
-import { createDockerNetwork } from "@/docker/networks";
+import { createDockerNetwork, getTraefikId, joinTraefikToNetwork } from "@/docker/networks";
 
 export const createCouncil = async (data: z.infer<typeof CreateStudentCouncilSchema>) => {
   const { user } = await getAuth();
@@ -58,6 +58,8 @@ export const createCouncil = async (data: z.infer<typeof CreateStudentCouncilSch
 
   // create a docker network
   await createDockerNetwork(council.dockerNetwork);
+  const traefikId = await getTraefikId();
+  await joinTraefikToNetwork(council.dockerNetwork, traefikId);
 
   return {
     errors: null,
